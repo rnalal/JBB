@@ -34,8 +34,8 @@
   <img src="images/admin.png"/>
 </p>
 
-#### -> 기타 화면은 PDF 참고해주세요!
-[PDF 파일 다운로드](images/project_detail.pdf) 
+#### 👉 기타 화면은 PDF 참고해주세요!
+🔗[PDF 파일 다운로드](images/project_detail.pdf) 
 
 ## ✨ 기술적 도전 & 해결 경험
 - 카테고리 선택 시, Ajax를 통해 대분류 선택 시 소분류가 동적으로 로딩되도록 구현
