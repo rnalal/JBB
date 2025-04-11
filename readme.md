@@ -30,7 +30,7 @@
 ## 📷 프로젝트 주요 화면
 <p align="center">
   <img src="images/a_main.png" width="50%" />
-  <img src="images/board_write.png" width="50%" />
+  <img src="images/board_write1.png" width="50%" />
   <img src="images/admin.png"/>
 </p>
 
