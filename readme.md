@@ -28,6 +28,8 @@
 
 ### 📷 프로젝트 주요 화면
 #### 로그인 전 메인페이지
-![메인페이지](images/b_main.png)
-![메인페이지](images/b_main2.png)
-![메인페이지](images/b_main3.png)
+<p align="center">
+  <img src="images/b_main.png" width="30%" />
+  <img src="images/b_main2.png" width="30%" />
+  <img src="images/b_main3.png" width="30%" />
+</p>
