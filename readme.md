@@ -19,6 +19,7 @@
 - 관리자가 답변을 달면 ‘답변 완료’ 표시
 - 하단바 : 작성한 글, 댓글, 좋아요 누른 게시물 표시 / 스크롤 내려도 고정
 - 메인 페이지 : 최신글 & 인기글(조회수 기반) Top5 슬라이더
+- 세션 타이머 기능 : 세션 만료 시간을 설정해서 모든 페이지 상단에 남은 시간 표시/ 5분전 연장 버튼 나타남/ 1분전 로그아웃 예고 알림 alert 창 표시
 
 ### 관리자 페이지
 - 사용자 관리 : 회원 목록 조회/ 관리
@@ -27,25 +28,17 @@
 - 인사이트 분석 기능(데이터 분석 도입) : 사용자 통계 (신규 가입자 수, 사용자 활동 빈도) / 게시판 사용량 분석(카테고리별 게시글 수, 일별 게시글 작성 수)
 
 ## 📷 프로젝트 주요 화면
-### 로그인 전 메인페이지
-<p align="center">
-  <img src="images/b_main.png" width="30%" />
-  <img src="images/b_main2.png" width="30%" />
-  <img src="images/b_main3.png" width="30%" />
-</p>
-
-### 로그인 후 메인페이지
 <p align="center">
   <img src="images/a_main.png" width="30%" />
-  <img src="images/a_main2.png" width="30%" />
-  <img src="images/a_main3.png" width="30%" />
+  <img src="images/board_write.png" width="30%" />
+  <img src="images/admin.png" width="30%" />
 </p>
 
-### 회원가입 및 로그인
-<p align="center">
-  <img src="images/login.png" width="20%" />
-  <img src="images/find_id.png" width="20%" />
-  <img src="images/join1.png" width="20%" />
-  <img src="images/join2.png" width="20%" />
-</p>
+#### 기타 화면은 PDF 참고해주세요!
+[PDF 파일 다운로드](images/project_detail.pdf) 
+
+## ✨ 기술적 도전 & 해결 경험
+- 카테고리 선택 시, Ajax를 통해 대분류 선택 시 소분류가 동적으로 로딩되도록 구현
+- 좋아요 기능에서 사용자 중복 방지를 위해 likes 테이블을 설계하고 toggle 로직 구현
+- 게시글 이미지 업로드 기능 구현 (Multipart 처리, 파일명 중복 방지)
 
