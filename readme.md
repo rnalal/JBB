@@ -29,12 +29,12 @@
 
 ## 📷 프로젝트 주요 화면
 <p align="center">
-  <img src="images/a_main.png" width="30%" />
-  <img src="images/board_write.png" width="30%" />
-  <img src="images/admin.png" width="30%" />
+  <img src="images/a_main.png" width="50%" />
+  <img src="images/board_write.png" width="50%" />
+  <img src="images/admin.png"/>
 </p>
 
-#### 기타 화면은 PDF 참고해주세요!
+#### -> 기타 화면은 PDF 참고해주세요!
 [PDF 파일 다운로드](images/project_detail.pdf) 
 
 ## ✨ 기술적 도전 & 해결 경험
