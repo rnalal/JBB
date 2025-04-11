@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.naver.jbb.dao.NotifyMapper">
+
+<!-- 공지사항 목록(사용자)-->
+<select id="notify_list" parameterType="SearchCondition" resultType="NotifyDto">
+	SELECT * FROM notify
+	WHERE true
+    <choose>
+		<when test='option=="T"'>
+			AND ntitle LIKE concat('%', #{keyword}, '%')
+		</when>
+		<otherwise>
+			AND (ntitle LIKE concat('%', #{keyword}, '%')
+			OR ncontent LIKE concat('%', #{keyword}, '%'))
+		</otherwise>
+	</choose>	
+	ORDER BY nno DESC
+</select>
+
+<!-- 공지사항 개수 -->
+<select id="notifyCnt" resultType="Integer">
+	SELECT count(*) FROM notify
+	WHERE true
+    <choose>
+		<when test='option=="T"'>
+			AND ntitle LIKE concat('%', #{keyword}, '%')
+		</when>
+		<otherwise>
+			AND (ntitle LIKE concat('%', #{keyword}, '%')
+			OR ncontent LIKE concat('%', #{keyword}, '%'))
+		</otherwise>
+	</choose>
+</select>
+
+<!-- 공지사항 상세보기 -->
+<select id="notify_detail" parameterType="int" resultType="NotifyDto">
+	SELECT * FROM notify
+	WHERE nno=#{nno}
+	ORDER BY nno DESC
+</select>
+
+<!-- 공지사항 등록 -->
+<insert id="insert" parameterType="NotifyDto">
+	INSERT INTO notify (ntitle, ncontent) 
+	VALUES (#{ntitle}, #{ncontent})  	
+</insert>
+
+<!-- 공지사항 수정 -->
+<update id="update" parameterType="NotifyDto">
+	UPDATE notify
+	SET ntitle=#{ntitle}, ncontent=#{ncontent}, n_date=now()
+	WHERE nno=#{nno}
+</update>
+
+<!-- 공지사항 삭제 -->
+<delete id="delete">
+	DELETE FROM notify WHERE nno=#{nno}
+</delete>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+		  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+		  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="UserDto" type="com.naver.jbb.domain.UserDto"/>
+		<typeAlias alias="BoardDto" type="com.naver.jbb.domain.BoardDto"/>
+		<typeAlias alias="CommentDto" type="com.naver.jbb.domain.CommentDto"/>
+		<typeAlias alias="SearchCondition" type="com.naver.jbb.domain.SearchCondition"/>
+		<typeAlias alias="CategoryDto" type="com.naver.jbb.domain.CategoryDto"/>
+		<typeAlias alias="LikesDto" type="com.naver.jbb.domain.LikesDto"/>
+		<typeAlias alias="NotifyDto" type="com.naver.jbb.domain.NotifyDto"/>
+		<typeAlias alias="QnaDto" type="com.naver.jbb.domain.QnaDto"/>
+		<typeAlias alias="FaqDto" type="com.naver.jbb.domain.FaqDto"/>
+		<typeAlias alias="UserActivityDto" type="com.naver.jbb.domain.UserActivityDto"/>
+	</typeAliases>
+</configuration>		  

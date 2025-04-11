@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.naver.jbb.dao.QnaMapper">
+
+<!-- 전체 질문 목록 -->
+<select id="getAllQuestions" resultType="QnaDto">
+	SELECT * FROM qna
+	WHERE parent_id IS NULL 
+	ORDER BY qno DESC
+</select>
+
+<!-- 내가 쓴 질문 목록 -->
+<select id="selectUserQnaList" parameterType="string" resultType="QnaDto">
+	SELECT * FROM qna 
+	WHERE writer = #{userId} 
+	AND parent_id IS NULL
+	ORDER BY qno DESC
+</select>
+
+<!-- 질문 추가 -->
+<insert id="insertQuestion" parameterType="QnaDto">
+	INSERT INTO qna (writer, q_content, is_answered)
+	VALUES (#{writer}, #{q_content}, false)
+</insert>
+
+<!-- 답변 조회 -->
+<select id="getQuestionWithAnswer" parameterType="map" resultType="QnaDto">
+	SELECT q.qno AS question_id, 
+		   q.writer AS question_writer,
+		   q.q_content,
+		   q.qna_date AS question_date,
+		   q.is_answered,
+		   a.qno AS answer_id,
+		   a.writer AS answer_writer,
+		   a.a_content,
+		   a.qna_date AS answer_date
+	FROM qna q
+	LEFT JOIN qna a ON q.qno = a.parent_id
+	WHERE q.qno = #{qno} AND q.writer = #{userId}  
+</select>
+
+<!-- 질문 삭제 -->
+<delete id="delete_question" parameterType="Integer">
+	DELETE FROM qna 
+	WHERE qno = #{qno} OR parent_id = #{qno}
+</delete>
+
+</mapper>
