@@ -43,8 +43,9 @@
 
 ### 회원가입 및 로그인
 <p align="center">
-  <img src="images/login.png" width="40%" />
-  <img src="images/find_id.png" width="40%" />
-  <img src="images/join1.png" width="40%" />
-  <img src="images/join2.png" width="40%" />
+  <img src="images/login.png" width="20%" />
+  <img src="images/find_id.png" width="20%" />
+  <img src="images/join1.png" width="20%" />
+  <img src="images/join2.png" width="20%" />
 </p>
+
