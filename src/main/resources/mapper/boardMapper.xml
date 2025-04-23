@@ -166,4 +166,38 @@
     WHERE c.commenter=#{commenter}
     ORDER BY c.reg_date DESC
 </select>
+
+<!-- 게시물 임시저장하기 -->
+<insert id="insertDraft" parameterType="BoardDraftDto">
+	Insert Into board_draft 
+	(writer, title, content, img1, img2, img3, b_bc_code, kip_cnt)
+	VALUES
+	(#{writer}, #{title}, #{content}, #{img1}, #{img2}, #{img3}, #{b_bc_code}, #{kip_cnt})
+</insert>
+<!-- 기존 임시저장 게시물 업데이트 -->
+<update id="updateDraft" parameterType="BoardDraftDto">
+	UPDATE board_draft
+	SET title = #{title}, 
+		content = #{content}, 
+		img1 #{img1}, 
+		img2 = #{img2}, 
+		img3 = #{img3},
+		b_bc_code = #{b_bc_code},
+		kip_cnt = #{kip_cnt} + 1, <!-- 저장 횟수 증가 -->
+		up_date = NOW()
+	WHERE draft_id #{draft_id}	
+</update>
+<!-- 작성자별 최신 Draft 한 건 조회 -->
+<select id="selectDraftByWriter" parameterType="String" resultType="BoardDraftDto">
+	SELECT draft_id, title, content, img1, img2, img3, b_bc_code, kip_cnt, up_date
+	FROM board_draft
+	WHERE writer = #{writer}
+	ORDER BY up_date DESC
+	LIMIT 1
+</select>
+<!-- Draft 삭제 (최종 게시 후) -->
+<delete id="deleteDraft" parameterType="Integer">
+	DELETE FROM board_draft
+	WHERE draft_id = #{draft_id}
+</delete>
 </mapper>
