@@ -179,13 +179,13 @@
 	UPDATE board_draft
 	SET title = #{title}, 
 		content = #{content}, 
-		img1 #{img1}, 
+		img1 = #{img1}, 
 		img2 = #{img2}, 
 		img3 = #{img3},
 		b_bc_code = #{b_bc_code},
 		kip_cnt = #{kip_cnt} + 1, <!-- 저장 횟수 증가 -->
 		up_date = NOW()
-	WHERE draft_id #{draft_id}	
+	WHERE draft_id = #{draft_id}	
 </update>
 <!-- 작성자별 최신 Draft 한 건 조회 -->
 <select id="selectDraftByWriter" parameterType="String" resultType="BoardDraftDto">

@@ -1,6 +1,8 @@
 package com.naver.jbb.controller;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,16 +20,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.naver.jbb.domain.BoardDraftDto;
 import com.naver.jbb.domain.BoardDto;
 import com.naver.jbb.domain.CategoryDto;
 import com.naver.jbb.domain.PageHandler;
 import com.naver.jbb.domain.SearchCondition;
+import com.naver.jbb.domain.UserDto;
 import com.naver.jbb.service.BoardService;
 import com.naver.jbb.service.CategoryService;
 
@@ -98,9 +103,22 @@ public class BoardController {
 	//게시물 등록
 	//(대분류만 전달)
 	@GetMapping("/write")
-	public String write(Model m) {
+	public String write(Model m, HttpSession session) {
+        String loginUser = (String)session.getAttribute("id");
+        
 		List<CategoryDto> categories = categoryService.getAllCategories();
         m.addAttribute("categories", categories);
+        
+        if(loginUser != null) {
+			try {
+				BoardDraftDto draft = boardService.getDraft(loginUser);
+				if(draft != null) {
+	        		m.addAttribute("draft",draft);
+	        	}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}     	
+        }
 		return "boardWrite";
 	}
 	//(Ajax 요청 - 대분류 선택 시 중분류 리스트 불러오기) 
@@ -111,7 +129,7 @@ public class BoardController {
 	    return categories;
 	}
 	@PostMapping("/write")
-	public String write(BoardDto boardDto, Model m, HttpSession session, RedirectAttributes rattr, HttpServletRequest request) {
+	public String write(BoardDto boardDto, @RequestParam(value = "draft_id", required = false) Integer draftId, Model m, HttpSession session, RedirectAttributes rattr, HttpServletRequest request) {
 		String writer = (String)session.getAttribute("id");
 		boardDto.setWriter(writer);
 		
@@ -122,6 +140,16 @@ public class BoardController {
 		if(!uploadFolder.exists()) {
 			uploadFolder.mkdirs(); //폴더가 없으면 생성
 		}
+		
+		//기존 draft가 있으면 조회해 두기 (기존 이미지명 보관용) ---
+	    BoardDraftDto draft = null;
+	    if (draftId != null) {
+	        try {
+				draft = boardService.getDraft(writer);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	    }
 				
 		try {
 			//파일 업로드 처리
@@ -135,28 +163,126 @@ public class BoardController {
 					String storedFileName = UUID.randomUUID().toString() + ext; // 랜덤 UUID 파일명
 					files[i].transferTo(new File(uploadDir + storedFileName)); // 파일 저장
 					fileNames[i] = storedFileName; // 저장된 파일명 저장
-				}
+				} else if (draft != null) {
+	                // 새 파일이 없으면 draft의 기존 이미지명 사용
+	                if (i == 0) fileNames[i] = draft.getImg1();
+	                if (i == 1) fileNames[i] = draft.getImg2();
+	                if (i == 2) fileNames[i] = draft.getImg3();
+	            }
 			}
 			//DTO에 저장된 파일명 설정
 			boardDto.setImg1(fileNames[0]);
 			boardDto.setImg2(fileNames[1]);
 			boardDto.setImg3(fileNames[2]);
 			
+			//draft폴더에 있던 이미지파일을 최종 업로드 폴더로 복사
+			if(draft != null) {
+				String draftDir  = request.getSession().getServletContext().getRealPath("/resources/upload/draft/");
+				String uploadDir1 = request.getSession().getServletContext().getRealPath("/resources/upload/");
+
+				for (int i = 0; i < fileNames.length; i++) {
+				    String fname = fileNames[i];
+				    if (draft != null && fname != null) {
+				        File from = new File(draftDir, fname);
+				        File to   = new File(uploadDir1, fname);
+				        if (from.exists() && !to.exists()) {
+				            Files.copy(from.toPath(), to.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				        }
+				    }
+				}
+			}
+			
 			//게시물 저장
-			int rowCnt = boardService.write(boardDto);
+			int rowCnt = boardService.write(boardDto);		
+			if(rowCnt!=1) throw new Exception("write failed");
 			
-			if(rowCnt!=1)
-				throw new Exception("write failed");
+			// 성공 시 draft 삭제 
+	        if (draftId != null) {
+	            boardService.removeDraft(draftId);
+	        }
 			
-				rattr.addFlashAttribute("msg", "WRT_OK");
-				
-				return "redirect:/board/list";
-		} catch (Exception e) {				
+			rattr.addFlashAttribute("msg", "WRT_OK");
+			return "redirect:/board/list";
+		} catch (Exception e) {		
+			// 실패 시: boardWrite.jsp로 다시, draft 유지
 			e.printStackTrace();
 			m.addAttribute(boardDto);
 			m.addAttribute("msg", "WRT_ERR");
+			if (draft != null) {
+	            m.addAttribute("draft", draft);
+	        }
 			return "boardWrite";
 		}
+	}
+	//게시물 임시저장 버튼 클릭 -> AJAX 호출
+	@PostMapping("/draft")
+	@ResponseBody
+	public ResponseEntity<Void> saveDraft(BoardDraftDto boardDraftDto, HttpSession session, HttpServletRequest request){
+		String writer = (String)session.getAttribute("id");
+		boardDraftDto.setWriter(writer);
+		
+		//기존 draft 불러오기 (update 시 병합용)
+        BoardDraftDto existing = null;
+        if (boardDraftDto.getDraft_id() != null) {
+            try {
+				existing = boardService.getDraft(writer);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
+		
+		//임시저장 전용 업로드 폴더
+		String draftDir = request.getSession().getServletContext().getRealPath("/resources/upload/draft/");
+		File draftFolder = new File(draftDir);
+		if(!draftFolder.exists()) draftFolder.mkdirs();
+		
+		//이미지 파일처리
+		MultipartFile[] files = {
+				boardDraftDto.getFile1(),
+				boardDraftDto.getFile2(),
+				boardDraftDto.getFile3()
+		};
+		String[] stored = new String[3];
+		
+		for(int i=0;i<files.length;i++) {
+			MultipartFile f = files[i];
+			if(f != null && !f.isEmpty()) {
+				String ext = f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf('.'));
+				String uuidName = UUID.randomUUID().toString() + ext;
+				try {
+			          f.transferTo(new File(draftDir, uuidName));
+			          stored[i] = uuidName;
+			        } catch (Exception e) {
+			          e.printStackTrace();
+			        }
+			      } else if(existing != null) {
+			    	  // 새 파일이 없으면 기존 Draft의 값을 유지
+		              if (i == 0) stored[0] = existing.getImg1();
+		              if (i == 1) stored[1] = existing.getImg2();
+		              if (i == 2) stored[2] = existing.getImg3();
+		            }
+			      }
+			    boardDraftDto.setImg1(stored[0]);
+			    boardDraftDto.setImg2(stored[1]);
+			    boardDraftDto.setImg3(stored[2]);
+			    
+		try {
+			boardService.saveDraft(boardDraftDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok().build();
+	}
+	//게시 완료 후 Draft 삭제 필요시
+	@PostMapping("/draft/delete")
+	@ResponseBody
+	public ResponseEntity<Void> deleteDraft(@RequestParam int draft_id) {
+		try {
+			boardService.removeDraft(draft_id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok().build();
 	}
 	
 	//게시물 삭제

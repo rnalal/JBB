@@ -3,6 +3,7 @@ package com.naver.jbb.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.naver.jbb.domain.BoardDraftDto;
 import com.naver.jbb.domain.BoardDto;
 import com.naver.jbb.domain.CategoryDto;
 import com.naver.jbb.domain.SearchCondition;
@@ -63,4 +64,13 @@ public interface BoardDao {
 	
 	//내가 쓴 댓글
 	List<BoardDto> mycommentlist(String commenter) throws Exception;
+	
+	//게시물 임시저장하기
+	int insertDraft(BoardDraftDto boardDraftDto) throws Exception;
+	//기존 임시저장 게시물 업데이트
+	int updateDraft(BoardDraftDto boardDraftDto) throws Exception;
+	//작성자별 최신 Draft 한 건 조회
+	BoardDraftDto selectDraftByWriter(String writer) throws Exception;
+	//Draft 삭제 (최종 게시 후)
+	int deleteDraft(Integer draft_id) throws Exception;
 }

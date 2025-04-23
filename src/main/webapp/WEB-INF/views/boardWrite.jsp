@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!-- 최상위경로 -->
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <c:set var="data_path" value="${pageContext.request.contextPath }/resources" />
@@ -120,8 +121,13 @@
 	    flex-direction: column;
 	    gap: 12px;
 	 }
+	 
+	 .btn{
+	 	width:100%;
+	 	display:flex;
+	 }
     
-     button {
+     .subBtn {
 	  	width: 100%;
 	    padding: 30px; /*내부 여백*/
 	    margin-top:10px;
@@ -134,6 +140,21 @@
 	    cursor: pointer;
 	    font-size: 30px;
 	}	
+	
+	.draftBtn {
+	  	width: 100%;
+	    padding: 30px; /*내부 여백*/
+	    margin-top:10px;
+	    margin-bottom:10px;
+	    font-size: 1rem;
+	    color: #FF8C00;
+	    background-color: white;
+	    border: 2px solid #FF8C00;
+	    border-radius: 4px;
+	    cursor: pointer;
+	    font-size: 30px;
+	}
+	
 	.category-select {
 	    width: 100%;
 	    height: 50px;
@@ -227,7 +248,56 @@
     <%@ include file="/WEB-INF/views/timeout.jsp" %>
 </div>
 <div class="container">
-<form action="<c:url value='/board/write'/>" method="post" id="form" onsubmit="return validateForm()" enctype="multipart/form-data">	
+<!-- 임시저장된 글이 있으면 불러오기 -->
+<c:if test="${not empty draft}">
+  <!-- 1) category 리스트에서 draft.b_bc_code의 부모 코드를 찾아 draftParent에 저장 -->
+  <c:forEach var="cat" items="${categories}">
+    <c:if test="${cat.bc_code == draft.b_bc_code}">
+      <c:set var="draftParent" value="${cat.bc_code_ref_mn}" />
+    </c:if>
+  </c:forEach>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (confirm('임시저장된 글이 있습니다. 불러오시겠습니까?')) {
+        // 제목·내용 채우기
+        $('#title').val('${fn:escapeXml(draft.title)}');
+        $('#content').val('${fn:escapeXml(draft.content)}');
+
+        // draft_id 히든 필드에 채우기
+        $('input[name="draft_id"]').val('${draft.draft_id}');
+
+        // 카테고리 복원: 먼저 대분류
+        $('#mainCategory').val('${draftParent}').trigger('change');
+        // AJAX로 중분류 로드 완료 후 subCategory에 값 대입
+        $(document).one('ajaxStop', function() {
+          $('#subCategory').val('${draft.b_bc_code}');
+        });
+
+        // 이미지 프리뷰 복원
+        <c:if test="${not empty draft.img1}">
+          $('#preview1')
+            .attr('src','${data_path}/upload/draft/${draft.img1}')
+            .show()
+            .closest('.image-upload').find('.plus-sign').hide();
+        </c:if>
+        <c:if test="${not empty draft.img2}">
+          $('#preview2')
+            .attr('src','${data_path}/upload/draft/${draft.img2}')
+            .show()
+            .closest('.image-upload').find('.plus-sign').hide();
+        </c:if>
+        <c:if test="${not empty draft.img3}">
+          $('#preview3')
+            .attr('src','${data_path}/upload/draft/${draft.img3}')
+            .show()
+            .closest('.image-upload').find('.plus-sign').hide();
+        </c:if>
+      }
+    });
+  </script>
+</c:if>
+<form action="<c:url value='/board/write'/>" method="post" id="form" onsubmit="return validateForm()" enctype="multipart/form-data">
 	<div class="select">
 		<!-- 대분류 선택 -->
 	    <select id="mainCategory" name="mainCategory" class="category-select">
@@ -243,6 +313,7 @@
 	        <option value="">중분류 선택</option>
 	    </select>	
 	</div>
+	<input type="hidden" name="draft_id" value="${draft.draft_id}">
 	<input type="hidden" name="bno" value="${boardDto.bno}">
 	<div class="input-group">
 		<input type="text" name="title" id="title" placeholder="제목을 입력하세요">
@@ -279,7 +350,10 @@
 	            </label>
 	        </div>
 	</div>
-	<button type="submit">등록</button>
+	<div class="btn">
+		<button type="button" id="saveDraftBtn" class="draftBtn">임시저장</button>
+		<button type="submit" class="subBtn">등록</button>
+	</div>
 </form>
 </div>
 </div>
@@ -335,7 +409,6 @@ $(document).ready(function () {
        });
 });
 </script>
-
 <!-- 홈으로 이동 -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -377,6 +450,20 @@ $(document).ready(function(){ //main()함수
 	})
 })
 </script>
-
+<!-- 게시글 임시저장 -->
+<script>
+$('#saveDraftBtn').click(function(){
+  const formData = new FormData($('#form')[0]);
+  $.ajax({
+    url:    '${path}/board/draft',
+    type:   'POST',
+    data:   formData,
+    processData: false,
+    contentType: false,
+    success:  ()=> alert('저장 완료'),
+    error:    ()=> alert('저장 실패'),
+  });
+});
+</script>
 </body>
 </html>

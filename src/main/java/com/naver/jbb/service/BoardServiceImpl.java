@@ -1,6 +1,5 @@
 package com.naver.jbb.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.naver.jbb.dao.BoardDao;
 import com.naver.jbb.dao.CommentDao;
+import com.naver.jbb.domain.BoardDraftDto;
 import com.naver.jbb.domain.BoardDto;
 import com.naver.jbb.domain.SearchCondition;
 
@@ -120,5 +120,25 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardDto> mycommentlist(String commenter) throws Exception{
 		return boardDao.mycommentlist(commenter);
+	}
+	
+	//게시물 임시저장하기 & 업데이트
+	@Override
+	public void saveDraft(BoardDraftDto boardDraftDto) throws Exception{
+		if(boardDraftDto.getDraft_id()==null) {
+			boardDao.insertDraft(boardDraftDto);
+		} else {
+			boardDao.updateDraft(boardDraftDto);
+		}
+	}	
+	//작성자별 최신 Draft 한 건 조회
+	@Override
+	public BoardDraftDto getDraft(String writer) throws Exception{
+		return boardDao.selectDraftByWriter(writer);
+	}
+	//Draft 삭제 (최종 게시 후)
+	@Override
+	public int removeDraft(Integer draft_id) throws Exception{
+		return boardDao.deleteDraft(draft_id);
 	}
 }

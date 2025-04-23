@@ -8,8 +8,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.naver.jbb.domain.BoardDraftDto;
 import com.naver.jbb.domain.BoardDto;
-import com.naver.jbb.domain.CategoryDto;
 import com.naver.jbb.domain.SearchCondition;
 
 @Repository
@@ -134,5 +134,26 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public List<BoardDto> mycommentlist(String commenter) throws Exception{
 		return session.selectList(namespace+"mycommentlist", commenter);
+	}
+	
+	//게시물 임시저장하기
+	@Override
+	public int insertDraft(BoardDraftDto boardDraftDto) throws Exception{
+		return session.insert(namespace+"insertDraft", boardDraftDto);
+	}
+	//기존 임시저장 게시물 업데이트
+	@Override
+	public int updateDraft(BoardDraftDto boardDraftDto) throws Exception{
+		return session.update(namespace+"updateDraft", boardDraftDto);
+	}
+	//작성자별 최신 Draft 한 건 조회
+	@Override
+	public BoardDraftDto selectDraftByWriter(String writer) throws Exception{
+		return session.selectOne(namespace+"selectDraftByWriter", writer);
+	}
+	//Draft 삭제 (최종 게시 후)
+	@Override
+	public int deleteDraft(Integer draft_id) throws Exception{
+		return session.delete(namespace+"deleteDraft", draft_id);
 	}
 }
