@@ -64,7 +64,6 @@ public class BoardDaoImpl implements BoardDao {
 		return session.insert(namespace+"insert", boardDto);
 	}
 
-	
 	//게시물 수정
 	@Override
 	public int update(BoardDto boardDto) throws Exception {

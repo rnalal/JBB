@@ -48,9 +48,11 @@ public class BoardServiceImpl implements BoardService {
 	//게시글 상세보기
 	@Override
 	public BoardDto read(Integer bno) throws Exception {
-		BoardDto boardDto = boardDao.select(bno);
-		boardDao.increaseViewCnt(bno);		
-		return boardDto;
+		return boardDao.select(bno);
+	}
+	@Override
+	public void increaseViewCnt(Integer bno) throws Exception{
+		boardDao.increaseViewCnt(bno);
 	}
 	
 	//페이징

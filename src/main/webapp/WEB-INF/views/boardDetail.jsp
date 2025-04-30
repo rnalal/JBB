@@ -519,6 +519,9 @@
 	    </c:if>
 	</div>  
 	<form id="form" enctype="multipart/form-data">
+<%-- 	<p style="font-size:14px; color:red;">
+		  본 글 목록: ${sessionScope.viewedPosts}
+		</p> --%>
 	 	<input type="hidden" name="bno" value="${boardDto.bno}">
 	 	<input type="hidden" name="cno" value="${commentDto.cno}">
 	 	<div class="input-group">

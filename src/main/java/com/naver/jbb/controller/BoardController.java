@@ -4,9 +4,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,9 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,7 +30,6 @@ import com.naver.jbb.domain.BoardDto;
 import com.naver.jbb.domain.CategoryDto;
 import com.naver.jbb.domain.PageHandler;
 import com.naver.jbb.domain.SearchCondition;
-import com.naver.jbb.domain.UserDto;
 import com.naver.jbb.service.BoardService;
 import com.naver.jbb.service.CategoryService;
 
@@ -86,18 +83,37 @@ public class BoardController {
 	
 	//게시물 상세보기
 	@GetMapping("/read")
-	public String read(Integer bno, Integer page, Integer pageSize, Model m) {
+	public String read(Integer bno, Integer page, Integer pageSize, Model m, HttpSession session) throws Exception{
 		
-		try {
-			BoardDto boardDto = boardService.read(bno);
-			m.addAttribute(boardDto);
-			m.addAttribute("page", page);
-			m.addAttribute("pageSize", pageSize); 
-		} catch (Exception e) {
-			e.printStackTrace();
+		//1) 세션에서 'viewedPosts' 꺼내기
+		@SuppressWarnings("unchecked")
+		Set<Integer> viewed = (Set<Integer>) session.getAttribute("viewedPosts");
+		if(viewed == null) {
+			 //처음 보는 세션이라면 새 Set 만들어서 세션에 올려두기
+			viewed = new HashSet<>();
 		}
+		//2) 이 글을 한번도 본 적이 없다면
+		if(!viewed.contains(bno)) {
+			// a) 조회수 증가
+			boardService.increaseViewCnt(bno);
+			// b) 세션에 본 글로 기록
+			viewed.add(bno);
+			session.setAttribute("viewedPosts", viewed);
+		}
+		//3) 실제 상세보기 화면으로 리다이렉트
+		return "redirect:/board/view?bno=" + bno;
+	}
+	@GetMapping("/view")
+	public String view(Integer bno, Model m, RedirectAttributes redirect) throws Exception{
+		//조회만 수행
+		BoardDto boardDto = boardService.read(bno);
+		if ( boardDto == null ) {
+			//글이 없으면 목록으로 돌려보내며 메시지
+			redirect.addFlashAttribute("alertMsg", "삭제되었거나 없는 게시물 입니다.");
+			return "redirect:/board/list";
+		}
+		m.addAttribute("boardDto", boardDto);
 		return "boardDetail";
-		
 	}
 	
 	//게시물 등록

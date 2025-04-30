@@ -135,12 +135,12 @@
    		padding: 0;
 	}
 	
-/*열거된 글자 사이에 점 넣기*/	
+	/*열거된 글자 사이에 점 넣기*/	
 	.b-b::after {
 	  content: "·"; /* 점 표시 */
 	  margin: 0 5px; /* 점과 텍스트 간격 설정 */
 	}	
-/*마지막 글자 뒤에는 X*/	
+	/*마지막 글자 뒤에는 X*/	
 	.b-b:last-child::after {
 	  content: ""; /* 마지막 요소 뒤에는 점 제거 */
 	}
@@ -327,10 +327,15 @@
 		text-align:center;
 		color:#FF8C00;
 		font-weight:bold;
-	}  
+	} 
 	
 </style>
 <body>
+<c:if test="${not empty alertMsg}">
+	<script type="text/javascript">
+		alert("${fn:escapeXml(alertMsg)}");
+	</script>
+</c:if>
 <div class="container">
 <div class="jbb-title">
 	<div class="title-left">
@@ -447,7 +452,6 @@ $(document).ready(function () {
     });
 });
 </script>
-
 <script>
 	$(document).ready(function () {
 	    // 대분류 버튼 클릭 시

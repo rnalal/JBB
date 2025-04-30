@@ -23,6 +23,7 @@ public interface BoardService {
 	
 	//게시글 상세보기
 	BoardDto read(Integer bno) throws Exception;
+	void increaseViewCnt(Integer bno) throws Exception;
 	
 	//페이징
 	List<BoardDto> getPage(Map map) throws Exception;
