@@ -31,6 +31,9 @@
 	        <mapping path="/board/mycommentlist"/>
 	        <mapping path="/board/mylikeslist"/>
 	        <mapping path="/board/myboardlist"/>
+	        <mapping path="/notifications"/>
+	        <mapping path="/notifications/unreadCount"/>
+	        <mapping path="/notifications/markAllRead"/>
 	        <beans:ref bean="AuthInterceptor"/>
 	    </interceptor>
 	</interceptors>

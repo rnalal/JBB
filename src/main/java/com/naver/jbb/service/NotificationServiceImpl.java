@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.naver.jbb.dao.NotificationDao;
 import com.naver.jbb.domain.Notification;
@@ -19,7 +20,12 @@ public class NotificationServiceImpl implements NotificationService {
 	
 	// userId(글 작성자)에게 1:1 알림 보내기
 	@Override
-	public void sendToUser(String userId, Notification noti) {
+	@Transactional
+	public void sendToUser(String userId, Notification noti) throws Exception {
+		//1)DB에 저장
+		noti.setRecipient(userId);
+		notificationDao.insert(noti);
+		
 		//구독 경로: /user/{userId}/queue/notifications
 		template.convertAndSendToUser(
 				userId,
@@ -27,7 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
 				noti
 		);
 	}
-	
+
 	@Override 
 	public List<Notification> getAll(String userId) throws Exception {
 		return notificationDao.selectAll(userId);

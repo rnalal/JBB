@@ -149,6 +149,9 @@
 		<div class="title-left">
 		    <button type="button" class="backbtn" onclick="history.back()"><</button>
 		    <img id="home-icon" class="home-icon" src="${data_path}/img/home.png" alt="홈">
+		    <div class="title-right">
+			    <%@ include file="/WEB-INF/views/common_notification.jsp" %>
+			 </div>
 	    </div>
 		<h2>좋아요 한 글</h2>
 		<%@ include file="/WEB-INF/views/timeout.jsp" %>

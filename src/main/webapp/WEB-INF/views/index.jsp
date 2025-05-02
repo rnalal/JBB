@@ -269,11 +269,13 @@
         }
 
 </style>
-
 <body>
      <!-- 헤더 -->
     <div class="header">
-        <div id="hamburger" class="hamburger">☰</div>        	
+        <div id="hamburger" class="hamburger">☰</div>
+        <div class="title-right">
+		    <%@ include file="/WEB-INF/views/common_notification.jsp" %>
+		 </div>      	
         <div class="logo">JBB</div>
     </div>
 	<%@ include file="/WEB-INF/views/timeout.jsp" %>

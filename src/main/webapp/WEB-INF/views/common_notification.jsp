@@ -19,7 +19,7 @@
 <body>
 <!-- 알림 아이콘 + 배지 -->
 <div id="notificationMenu" style="position:relative; display:inline-block; cursor:pointer;">
-  <img src="${ctx}/resources/img/bell.png" style="width:32px;height:32px;" />
+  <span id="bellIcon" style="font-size:48px; color:#FF8C00;">🔔</span>
   <span id="unreadBadge" 
         style="position:absolute; top:0; right:0; background:red; color:white;
                width:16px; height:16px; line-height:16px; text-align:center;

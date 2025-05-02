@@ -36,6 +36,7 @@ public class LikesServiceImpl implements LikesService{
 			
 			// 2) 알림 생성
 			Notification noti = new Notification();
+			noti.setRecipient(postOwner);
 			noti.setType("LIKE");
 			noti.setMessage(likesDto.getUser_id()+"님이 좋아요를 눌렀습니다.");
 			noti.setUrl("/board/read?bno="+likesDto.getBoard_bno());

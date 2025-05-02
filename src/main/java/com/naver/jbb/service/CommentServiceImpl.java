@@ -49,6 +49,7 @@ public class CommentServiceImpl implements CommentService{
         
         // 3) 알림 객체 생성
         Notification noti = new Notification();
+        noti.setRecipient(postOwner);
         noti.setType("COMMENT");
         noti.setMessage(commentDto.getCommenter() + "님이 댓글을 남겼습니다.");
         noti.setUrl("/board/read?bno=" + commentDto.getBno());

@@ -489,12 +489,14 @@
 </style>
 </head>
 <body>
-<%@ include file="/WEB-INF/views/commen_notification.jsp" %>
 <div class="body">
 <div class="jbb-title">
 	<div class="title-left">
 	    <button type="button" class="backbtn" onclick="history.back()"><</button>
 	    <img id="home-icon" class="home-icon" src="${data_path}/img/home.png" alt="홈">
+	    <div class="title-right">
+		    <%@ include file="/WEB-INF/views/common_notification.jsp" %>
+		 </div>
     </div>
     <h2>게시물</h2>
     <%@ include file="/WEB-INF/views/timeout.jsp" %>
