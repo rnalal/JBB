@@ -1,8 +1,6 @@
 package com.naver.jbb.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.naver.jbb.dao.BoardDao;
 import com.naver.jbb.dao.CommentDao;
 import com.naver.jbb.domain.CommentDto;
+import com.naver.jbb.domain.Notification;
 
 @Service
 public class CommentServiceImpl implements CommentService{
@@ -19,6 +18,8 @@ public class CommentServiceImpl implements CommentService{
 	BoardDao boardDao;
 	@Autowired
 	CommentDao commentDao;
+	@Autowired
+	NotificationService notificationService;
 	
 	//댓글 개수
 	@Override
@@ -39,8 +40,23 @@ public class CommentServiceImpl implements CommentService{
 	@Override
     @Transactional(rollbackFor = Exception.class)
     public int write(CommentDto commentDto) throws Exception {
+		// 1) 댓글 수 증가 & DB 저장
         boardDao.updateCommentCnt(commentDto.getBno(), 1);
-        return commentDao.insert(commentDto);
+        int rowCnt = commentDao.insert(commentDto);
+        
+        // 2) 글쓴이 아이디 조회
+        String postOwner = boardDao.findWriterByBno(commentDto.getBno());
+        
+        // 3) 알림 객체 생성
+        Notification noti = new Notification();
+        noti.setType("COMMENT");
+        noti.setMessage(commentDto.getCommenter() + "님이 댓글을 남겼습니다.");
+        noti.setUrl("/board/read?bno=" + commentDto.getBno());
+        
+        // 4) 알림 전송
+        notificationService.sendToUser(postOwner, noti);
+        
+        return rowCnt;
     }
 	
 	//댓글 목록

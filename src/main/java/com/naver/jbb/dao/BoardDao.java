@@ -73,4 +73,7 @@ public interface BoardDao {
 	BoardDraftDto selectDraftByWriter(String writer) throws Exception;
 	//Draft 삭제 (최종 게시 후)
 	int deleteDraft(Integer draft_id) throws Exception;
+	
+	//글쓴이 가져오기
+	String findWriterByBno(Integer bno) throws Exception;
 }

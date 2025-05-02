@@ -331,6 +331,7 @@
 	
 </style>
 <body>
+<%@ include file="/WEB-INF/views/commen_notification.jsp" %>
 <c:if test="${not empty alertMsg}">
 	<script type="text/javascript">
 		alert("${fn:escapeXml(alertMsg)}");

@@ -15,5 +15,6 @@
 		<typeAlias alias="FaqDto" type="com.naver.jbb.domain.FaqDto"/>
 		<typeAlias alias="UserActivityDto" type="com.naver.jbb.domain.UserActivityDto"/>
 		<typeAlias alias="BoardDraftDto" type="com.naver.jbb.domain.BoardDraftDto"/>
+		<typeAlias alias="Notification" type="com.naver.jbb.domain.Notification"/>
 	</typeAliases>
 </configuration>		  

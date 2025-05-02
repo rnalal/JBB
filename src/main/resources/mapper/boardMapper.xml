@@ -200,4 +200,11 @@
 	DELETE FROM board_draft
 	WHERE draft_id = #{draft_id}
 </delete>
+
+<!-- 글쓴이 가져오기 -->
+<select id="findWriterByBno" parameterType="Integer" resultType="String">
+	SELECT writer
+	FROM board
+	WHERE bno = #{bno}
+</select>
 </mapper>

@@ -489,6 +489,7 @@
 </style>
 </head>
 <body>
+<%@ include file="/WEB-INF/views/commen_notification.jsp" %>
 <div class="body">
 <div class="jbb-title">
 	<div class="title-left">

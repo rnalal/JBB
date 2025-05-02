@@ -14,6 +14,24 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 	</properties>
 	<dependencies>
+	
+		<!-- WebSocket + STOMP (알림) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+  			<artifactId>spring-websocket</artifactId>
+			<version>5.0.7.RELEASE</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.springframework</groupId>
+		  <artifactId>spring-messaging</artifactId>
+		  <version>5.0.7.RELEASE</version>
+		</dependency>
+		<!-- JSON 파싱용 -->
+		<dependency>
+		  <groupId>com.fasterxml.jackson.core</groupId>
+		  <artifactId>jackson-databind</artifactId>
+		  <version>2.15.2</version>
+		</dependency>
 		
 		<!-- Multipart Resolver -->
 		<dependency>

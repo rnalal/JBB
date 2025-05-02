@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.naver.jbb.dao.NotificationMapper">
+<!-- 알림 저장 -->
+<insert id="insert" parameterType="Notification">
+	INSERT INTO notification(recipient, type, message, url)
+	VALUES(#{recipient},#{type},#{message},#{url})
+</insert>
+
+<!-- 사용자별 전체 알림 조회 -->
+<select id="selectAll" parameterType="String" resultType="Notification">
+	SELECT * FROM notification
+	WHERE recipient=#{recipient}
+	ORDER BY created_at DESC
+</select>
+
+<!-- 읽지 않은 개수 -->
+<select id="countUnread" parameterType="String" resultType="Integer">
+	SELECT COUNT(*) FROM notification
+	WHERE recipient=#{recipient} AND is_read=FALSE
+</select>
+
+<!-- 모두 읽음 처리 -->
+<update id="markAllRead" parameterType="String">
+	UPDATE notification SET is_read=TRUE
+	WHERE recipient=#{recipient} AND is_read=FALSE
+</update>
+</mapper>

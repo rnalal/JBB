@@ -155,4 +155,10 @@ public class BoardDaoImpl implements BoardDao {
 	public int deleteDraft(Integer draft_id) throws Exception{
 		return session.delete(namespace+"deleteDraft", draft_id);
 	}
+	
+	//글쓴이 가져오기
+	@Override
+	public String findWriterByBno(Integer bno) throws Exception{
+		return session.selectOne(namespace+"findWriterByBno", bno);
+	}
 }
