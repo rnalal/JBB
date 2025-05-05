@@ -58,17 +58,13 @@
 
     // 알림 보여주기 (기존 코드 재사용)
     window.showNotification = function(noti){
-      if (document.hidden && Notification.permission==='granted'){
-        var n = new Notification('새 알림', { body:noti.message });
-        n.onclick = function(){
-          window.focus();
-          location.href = '${ctx}'+noti.url;
-        };
-      } else {
-        if(confirm(noti.message+'\n이동할까요?')){
-          location.href='${ctx}'+noti.url;
-        }
-      }
+    	// (1) 데스크탑 알림 대신 무조건 alert
+    	  alert(noti.message);
+    	  
+    	  // (2) 만약 '이동' 기능이 필요하면 추가로 confirm 혹은 직접 redirect
+    	  if (confirm('페이지로 이동하시겠습니까?')) {
+    	    location.href = '${ctx}' + noti.url;
+    	  }
     };
 
     // 페이지 로드 시 알림 권한 요청
