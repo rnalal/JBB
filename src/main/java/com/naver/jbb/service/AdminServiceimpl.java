@@ -23,7 +23,7 @@ public class AdminServiceimpl implements AdminService{
 	@Autowired
 	private AdminDao adminDao;
 	
-	//사용자 목록 조회 
+	// 사용자 목록 조회 
 	@Override
 	public List<UserDto> getUserListPaging(SearchCondition sc) throws Exception{
 		return adminDao.getUserListPaging(sc);
