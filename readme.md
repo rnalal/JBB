@@ -2,7 +2,7 @@
 “사용성과 운영 효율을 함께 고려한 게시판 프로젝트로, 사용자 중심의 기능부터 관리자 인사이트 기능까지 직접 기획 및 구현했습니다.”
 
 ## 🔧사용 기술
-- Java(JDK 1.8), HTML/CSS, JavaScript
+- Java(JDK 11), HTML/CSS, JavaScript
 - Apache Tomcat 9.0
 - STS 3, MyBatis
 - MySQL
