@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.naver.jbb.domain.UserDto;
 import com.naver.jbb.service.AdminService;
@@ -30,17 +31,11 @@ public class AdminLoginController {
 	}
 	@PostMapping("/adminlogin")
 	public String login(String id, String pwd, String toURL,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response, RedirectAttributes rattr) throws Exception {
 		
 		if(!loginCheck(id, pwd)) {
-
-			PrintWriter out = response.getWriter();
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("text/html; charset=utf-8");
-			out.println("<script> alert('아이디 또는 비밀번호가 틀립니다.');");
-			out.println("history.go(-1); </script>"); 
-			out.close();
-			return "admin_login";
+			rattr.addFlashAttribute("msg", "아이디 또는 비밀번호가 틀립니다.");
+			return "redirect:/adminlogin";
 		}
 
 		HttpSession session = request.getSession();

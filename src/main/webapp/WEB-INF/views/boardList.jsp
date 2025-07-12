@@ -587,7 +587,6 @@ $(document).on("click", ".category-button", function () {
   if(msg=="WRT_OK") alert("게시물이 등록되었습니다.");
   if(msg=="DEL_OK") alert("게시물이 성공적으로 삭제되었습니다.");
   if(msg=="MOD_OK") alert("게시물이 수정되었습니다.");
-  if(msg=="MOD_ERR") alert("수정에 실패했습니다.");
 </script>
 </body>
 </html>

@@ -76,18 +76,13 @@ public class UserController {
 	}
 	@PostMapping("/login")
 	public String login(String id, String pwd, String toURL, boolean rememberId, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response, RedirectAttributes rattr) throws Exception {
 		
 		// 1. id와 pwd를 확인
 		if(!loginCheck(id, pwd)) {
 			// 2-1. 일치하지 않으면 login으로 이동
-			PrintWriter out = response.getWriter();
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("text/html; charset=utf-8");
-			out.println("<script> alert('아이디 또는 비밀번호가 틀립니다.');");
-			out.println("history.go(-1); </script>"); 
-			out.close();
-			return "login";
+			rattr.addFlashAttribute("msg", "아이디 또는 비밀번호가 틀립니다.");
+			return "redirect:/user/login"; //다시 로그인 페이지로 이동
 		}
 		// 2-2. id와 pwd가 일치하면,
 		// 세션 객체 얻어오기

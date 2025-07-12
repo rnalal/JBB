@@ -4,6 +4,9 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page session="false" %>
+<c:if test="${not empty msg}">
+	<script>alert(`${msg}`);</script>
+</c:if>
 <!-- 최상위경로 -->
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <c:set var="data_path" value="${pageContext.request.contextPath }/resources" />

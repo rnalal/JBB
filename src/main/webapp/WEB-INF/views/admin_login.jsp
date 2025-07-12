@@ -3,6 +3,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib prefix = "fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<c:if test="${not empty msg}">
+	<script>alert(`${msg}`);</script>
+</c:if>
 <!-- 최상위경로 -->
 <c:set var="path" value="${pageContext.request.contextPath }" />
 <c:set var="data_path" value="${pageContext.request.contextPath }/resources" />

@@ -914,71 +914,11 @@ $(document).ready(function () {
 <script>
 //수정버튼
 $('#modifyBtn').on("click", function(){
-	//1. 상세보기 상태면 수정 상태로 변경
-	let form = $("#form");
-    let isReadonly = $("input[name=title]").attr('readonly');
-	
-	if(isReadonly=='readonly'){
-		$("h2").html("게시물 수정");
-		$("input[name=title]").attr('readonly', false).addClass('editable');
-        $("textarea").attr('readonly', false).addClass('editable');
-		$(".dropdown-btn").hide();
-		$(".dropdown-menu").hide();
-		$(".comment-section").hide(); //댓글창 숨기기
-		$(".stats-actions").hide(); //조회수,공감 숨기기
-        $(".edit-images").show();  // 숨겨진 이미지 선택 기능 보이기
-        $(".image-container").hide(); // 기존 이미지는 숨기기		
-		let registerBtn = '<button type="button" id="registerBtn" class="register-btn">등록</button>';
-		$(".dropdown-container").append(registerBtn);
-		$(".editable").css({
-	            "border": "1px solid #ccc",
-	            "background-color": "#f9f9f9",
-	            "border-radius": "4px", /* 둥근 모서리 */
-	            "line-height": "1.5",/* 줄 간격 조정 */
-				"white-space": "pre-line", /* 변경된 줄바꿈 방식 */
-				"text-align": "left", /* 왼쪽 정렬 */
-        		"box-sizing": "border-box" /* 패딩 포함 크기 계산 */
-	    });
-		$(".editable").filter("textarea").css({
-		    "height": "400px"
-		});
-		// 기존 이미지 미리보기 유지
-        $("#edit-images .preview-image").each(function() {
-            let src = $(this).attr("src");
-            if (src && src.trim() !== "") {
-                $(this).show();
-                $(this).siblings(".plus-sign").hide();
-            }
-        });
-		// 첫 번째 줄 공백 제거 (문제 해결 핵심)
-        let content = $("textarea").val();
-        $("textarea").val(content.trimStart()); // 시작 공백 제거
-        
-		return;
-	}
-});
-//이미지 미리보기 기능
-function previewImage(input, previewId) {
-    var file = input.files[0];
-    var reader = new FileReader();
-    
-    reader.onload = function(e) {
-        let preview = $('#' + previewId);
-        preview.attr('src', e.target.result);  // 미리보기 이미지 변경
-        preview.show();  // 이미지 표시
-    };
-
-    if (file) {
-        reader.readAsDataURL(file);
-    }
-}
-//등록 버튼 클릭 처리 > 수정된 내용을 서버로 전송
-$(document).on("click", "#registerBtn", function() {
-    let form = $("#form");
-    form.attr("action", "<c:url value='/board/modify?page=${page}&pageSize=${pageSize}'/>");
-    form.attr("method", "post");
-    form.submit();
-});
+	let form = $('#form');
+	form.attr("action", "<c:url value='/board/modify'/>");
+	form.attr("method", "get");
+	form.submit();
+})
 //삭제버튼
 $('#removeBtn').on("click", function(){
 	if(!confirm("정말로 삭제하시겠습니까?")) return;

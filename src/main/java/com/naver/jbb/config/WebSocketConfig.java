@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -29,6 +30,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 					protected Principal determineUser(ServerHttpRequest request, 
 													  WebSocketHandler wsHandler, Map<String, Object> attributes) {
 						HttpServletRequest servletReq = ((ServletServerHttpRequest) request).getServletRequest();
+						HttpSession session = servletReq.getSession(false);
+						
+						//세션 또는 id가 없으면 anoaymous 사용자로 처리
+						if(session == null || session.getAttribute("id") == null) {
+							return () -> "anonymous"; 
+						}					
+						
 						String userId = (String) servletReq.getSession().getAttribute("id");
 						return () -> userId;
 					}

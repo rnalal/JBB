@@ -325,6 +325,20 @@ public class BoardController {
 	}
 	
 	//게시물 수정
+	@GetMapping("/modify")
+	public String modify(@RequestParam("bno") Integer bno, @RequestParam(value="page", required=false) Integer page,
+						 @RequestParam(value="pageSize", required=false) Integer pageSize, Model m) {
+		try {
+			BoardDto boardDto = boardService.read(bno); //bno로 게시물 조회
+			m.addAttribute("boardDto", boardDto);
+			m.addAttribute("page", page);
+			m.addAttribute("pageSize", pageSize);
+			return "boardModify";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "redirect:/board/list"; // 실패 시 리스트로
+		} 
+	}
 	@PostMapping("/modify")
 	public String modify(BoardDto boardDto,
 						 @RequestParam(value="img1_hidden", required=false) String img1_hidden,
