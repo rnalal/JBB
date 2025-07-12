@@ -68,21 +68,20 @@ const loginTime = <%= session.getAttribute("loginTime") != null ? "\"" + session
         const sessionDuration = 30 * 60 * 1000; // 30분
         let sessionEndTime = parseInt(loginTime) + sessionDuration;
         let alertShown = false;
-
+        
         const timerEl = document.getElementById("session-timer");
-        const extendBtn = document.getElementById("extend-session-btn");
+        const extendBtn = document.getElementById("extend-session-btn");   
         
         function updateTimer() {
             const now = new Date().getTime();
             const remaining = sessionEndTime - now;
-
+            
             if (remaining <= 0) {
                 timerEl.textContent = "세션이 만료되었습니다.";
                 alert("세션이 만료되어 로그아웃됩니다.");
                 location.href = logoutURL; // 로그아웃 처리
                 return;
             }
-
             const min = Math.floor(remaining / 60000);
             const sec = Math.floor((remaining % 60000) / 1000);
             timerEl.textContent = "로그아웃까지 " + min + "분 " + sec + "초";
@@ -90,16 +89,13 @@ const loginTime = <%= session.getAttribute("loginTime") != null ? "\"" + session
             if (remaining <= 5 * 60 * 1000) {
                 extendBtn.style.display = "inline";
             }
-
             // 1분 이하 → 팝업 알림 한 번만
             if (remaining <= 60 * 1000 && !alertShown) {
                 alert("세션이 1분 뒤 만료됩니다. 연장하지 않으면 자동 로그아웃됩니다.");
                 alertShown = true;
             }
-
             setTimeout(updateTimer, 1000);
         }
-
         extendBtn.addEventListener("click", () => {
             fetch(contextPath +"/user/extend-session", { method: "POST" })
                 .then(res => res.text())
@@ -110,7 +106,6 @@ const loginTime = <%= session.getAttribute("loginTime") != null ? "\"" + session
                     }
                 });
         });
-
         updateTimer();
     }
 </script>

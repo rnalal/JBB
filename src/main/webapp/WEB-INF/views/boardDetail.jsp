@@ -527,6 +527,8 @@
 		</p> --%>
 	 	<input type="hidden" name="bno" value="${boardDto.bno}">
 	 	<input type="hidden" name="cno" value="${commentDto.cno}">
+	 	<input type="hidden" name="page" value="${page}">
+	 	<input type="hidden" name="pageSize" value="${pageSize}">
 	 	<div class="input-group">
 			<input type="text" name="title" class="editable" value="<c:out value='${boardDto.title}'/>" readonly="readonly">
 		</div>

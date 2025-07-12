@@ -83,7 +83,7 @@ public class BoardController {
 	
 	//게시물 상세보기
 	@GetMapping("/read")
-	public String read(Integer bno, Integer page, Integer pageSize, Model m, HttpSession session) throws Exception{
+	public String read(Integer bno, Integer page, Integer pageSize, Model m, HttpSession session, RedirectAttributes rattr) throws Exception{
 		
 		//1) 세션에서 'viewedPosts' 꺼내기
 		@SuppressWarnings("unchecked")
@@ -101,6 +101,8 @@ public class BoardController {
 			session.setAttribute("viewedPosts", viewed);
 		}
 		//3) 실제 상세보기 화면으로 리다이렉트
+		rattr.addAttribute("page", page);
+        rattr.addAttribute("pageSize", pageSize);
 		return "redirect:/board/view?bno=" + bno;
 	}
 	@GetMapping("/view")

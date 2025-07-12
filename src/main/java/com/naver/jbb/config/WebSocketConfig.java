@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		//클라이언트가 /ws로 연결 요펑 -> SockJS 지원
+		//클라이언트가 /ws로 연결 요청 -> SockJS 지원
 		registry.addEndpoint("/ws")
 				.setHandshakeHandler(new DefaultHandshakeHandler() {
 					//연결 시 HttpSession의 "id"를 꺼내서 STOMP Principal로 설정
