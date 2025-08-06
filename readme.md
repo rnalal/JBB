@@ -89,7 +89,7 @@
 ---
 
 ## 📊 데이터베이스 설계 (ERD)
-<img src="images/jbb_erd.png" width="40%" />
+<img src="images/jbb_erd.png"/>
 
 ---
 
