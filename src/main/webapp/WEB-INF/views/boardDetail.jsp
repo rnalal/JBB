@@ -180,7 +180,7 @@
 	    gap: 10px; /* 버튼 간격 조정 */
 	}
 	
-	.stats .removeBtn {
+	.removeBtn {
 		border: 1px solid #FF8C00;
 	    background-color: white;
 	    color: red;
@@ -190,14 +190,16 @@
 	    font-size: 20px;
 	}
 	
-	.stats .modifyBtn {
+	.modifyBtn {
 		border: none;
-	    background-color: #4CAF50;
-	    color: white;
+	    background-color: white;
+	    color:gray;
 	    padding: 10px 15px;
 	    border-radius: 4px;
 	    cursor: pointer;
 	    font-size: 20px;
+	    text-decoration: none;
+	    font-weight:bold;
 	}
 
     .actions {
@@ -515,7 +517,10 @@
 	        <div class="dropdown-container">
 	            <button class="dropdown-btn">⋮</button>
 	            <ul class="dropdown-menu">
-	                <li><button type="button" id="modifyBtn" class="modifyBtn">수정</button></li><hr>
+	                <li>
+	                	<a href="<c:url value='/board/modify?bno=${boardDto.bno}&page=${page}&pageSize=${pageSize}'/>" 
+	                		class="modifyBtn">수정</a>
+	                </li><hr>
 	                <li><button type="button" id="removeBtn" class="removeBtn">삭제</button></li>
 	            </ul>
 	        </div>
@@ -527,8 +532,6 @@
 		</p> --%>
 	 	<input type="hidden" name="bno" value="${boardDto.bno}">
 	 	<input type="hidden" name="cno" value="${commentDto.cno}">
-	 	<input type="hidden" name="page" value="${page}">
-	 	<input type="hidden" name="pageSize" value="${pageSize}">
 	 	<div class="input-group">
 			<input type="text" name="title" class="editable" value="<c:out value='${boardDto.title}'/>" readonly="readonly">
 		</div>
@@ -565,54 +568,6 @@
 					<!-- 필요하면 기본 이미지 넣고, 아니면 생략 -->
 				</c:otherwise>
 			</c:choose>
-		</div>
-		<!-- 수정 모드에서 보일 이미지 업로드 영역 (초기에는 숨김) -->
-		<div id="edit-images" class="edit-images" style="display: none;">
-		<span class="img_letter">이미지 수정</span>
-		    <div class="image-upload-group">
-			    <!-- 기존 이미지 경로 유지용 hidden 필드 추가 -->
-	            <input type="hidden" name="img1_hidden" value="${boardDto.img1}">
-	            <input type="hidden" name="img2_hidden" value="${boardDto.img2}">
-	            <input type="hidden" name="img3_hidden" value="${boardDto.img3}">
-	            
-			    <label class="image-upload">
-			        <input type="file" name="file1" id="file1" hidden onchange="previewImage(this, 'preview1')">
-			        <div class="upload-circle">
-			            <span class="plus-sign">+</span>
-			            <c:if test="${not empty boardDto.img1}">
-						    <img id="preview1" class="preview-image" src="${data_path}/upload/${boardDto.img1}" style="display: block;" alt="대표 이미지">
-						</c:if>
-						<c:if test="${empty boardDto.img1}">
-						    <img id="preview1" class="preview-image" style="display: none;" alt="대표 이미지">
-						</c:if>
-			        </div>
-			    </label>
-			    <span class="divider"></span>
-			    <label class="image-upload">
-			        <input type="file" name="file2" id="file2" hidden onchange="previewImage(this, 'preview2')">
-			        <div class="upload-circle">
-			            <span class="plus-sign">+</span>
-			            <c:if test="${not empty boardDto.img2}">
-						    <img id="preview1" class="preview-image" src="${data_path}/upload/${boardDto.img2}" style="display: block;" alt="추가 이미지">
-						</c:if>
-						<c:if test="${empty boardDto.img2}">
-						    <img id="preview1" class="preview-image" style="display: none;" alt="추가 이미지">
-						</c:if>
-			        </div>
-			    </label>		
-			    <label class="image-upload">
-			        <input type="file" name="file3" id="file3" hidden onchange="previewImage(this, 'preview3')">
-			        <div class="upload-circle">
-			            <span class="plus-sign">+</span>
-			            <c:if test="${not empty boardDto.img3}">
-						    <img id="preview1" class="preview-image" src="${data_path}/upload/${boardDto.img3}" style="display: block;" alt="추가 이미지">
-						</c:if>
-						<c:if test="${empty boardDto.img3}">
-						    <img id="preview1" class="preview-image" style="display: none;" alt="추가 이미지">
-						</c:if>
-			        </div>
-			    </label>
-		    </div>
 		</div>
 	</form>	
     <div class="stats-actions">
@@ -912,13 +867,6 @@ $(document).ready(function () {
         }
 </script>
 <script>
-//수정버튼
-$('#modifyBtn').on("click", function(){
-	let form = $('#form');
-	form.attr("action", "<c:url value='/board/modify'/>");
-	form.attr("method", "get");
-	form.submit();
-})
 //삭제버튼
 $('#removeBtn').on("click", function(){
 	if(!confirm("정말로 삭제하시겠습니까?")) return;

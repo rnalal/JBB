@@ -209,13 +209,7 @@
         margin-left:50px;
         margin-right:50px;
     }
-    
-    .image-container img{
-		width:800px;
-		margin-bottom: 20px;
-		border: 2px solid #ccc;
-		border-radius:40px;
-	}
+   
 </style>
 </head>
 <body>
@@ -237,6 +231,8 @@
 	<input type="hidden" name="img1_hidden" value="${boardDto.img1}">
 	<input type="hidden" name="img2_hidden" value="${boardDto.img2}">
 	<input type="hidden" name="img3_hidden" value="${boardDto.img3}">
+	<input type="hidden" name="page" value="${page}">
+	<input type="hidden" name="pageSize" value="${pageSize}">
 	<div class="input-group">
 		<input type="text" name="title" id="title" value="${boardDto.title}">
 	</div>

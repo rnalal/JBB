@@ -83,7 +83,10 @@ public class BoardController {
 	
 	//게시물 상세보기
 	@GetMapping("/read")
-	public String read(Integer bno, Integer page, Integer pageSize, Model m, HttpSession session, RedirectAttributes rattr) throws Exception{
+	public String read(@RequestParam("bno") Integer bno, 
+					   @RequestParam(value="page", required=false) Integer page,
+					   @RequestParam(value="pageSize", required=false) Integer pageSize, 
+					   Model m, HttpSession session, RedirectAttributes rattr) throws Exception{
 		
 		//1) 세션에서 'viewedPosts' 꺼내기
 		@SuppressWarnings("unchecked")
@@ -101,19 +104,26 @@ public class BoardController {
 			session.setAttribute("viewedPosts", viewed);
 		}
 		//3) 실제 상세보기 화면으로 리다이렉트
+		rattr.addAttribute("bno", bno);
 		rattr.addAttribute("page", page);
         rattr.addAttribute("pageSize", pageSize);
-		return "redirect:/board/view?bno=" + bno;
+		return "redirect:/board/view";
 	}
 	@GetMapping("/view")
-	public String view(Integer bno, Model m, RedirectAttributes redirect) throws Exception{
+	public String view(@RequestParam("bno") Integer bno, 
+					   @RequestParam(value="page", required=false) Integer page,
+					   @RequestParam(value="pageSize", required=false) Integer pageSize, Model m, RedirectAttributes redirect) throws Exception{
 		//조회만 수행
 		BoardDto boardDto = boardService.read(bno);
 		if ( boardDto == null ) {
 			//글이 없으면 목록으로 돌려보내며 메시지
 			redirect.addFlashAttribute("alertMsg", "삭제되었거나 없는 게시물 입니다.");
+			m.addAttribute("page", page);
+			m.addAttribute("pageSize", pageSize);
 			return "redirect:/board/list";
 		}
+		m.addAttribute("page", page);
+		m.addAttribute("pageSize", pageSize);
 		m.addAttribute("boardDto", boardDto);
 		return "boardDetail";
 	}
@@ -386,15 +396,14 @@ public class BoardController {
 	        rattr.addAttribute("page", page);
 	        rattr.addAttribute("pageSize", pageSize);
 	        rattr.addFlashAttribute("msg", "MOD_OK");
-	        return "redirect:/board/list";
-		
+	        return "redirect:/board/list";		
 		} catch (Exception e) {
 			e.printStackTrace();
 			m.addAttribute(boardDto);
 			m.addAttribute("page", page);
 			m.addAttribute("pageSize", pageSize);
 			m.addAttribute("msg", "MOD_ERR");
-			return "boardDetail";
+			return "boardModify";
 		}
 	}
 
